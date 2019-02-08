@@ -2,11 +2,10 @@
 	"name": "lscache",
 	"version": "1.2.0",
 	"homepage": "https://github.com/pamelafox/lscache",
-	"main": ["lscache.min.js", "lscache.js"],
+	"main": ["dist/lscache.min.js", "dist/lscache.js"],
 	"ignore": [
 		"demo",
 		"tests",
-		"Gruntfile.js",
 		"package.json"
 	],
 	"keywords": [

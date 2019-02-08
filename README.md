@@ -1,17 +1,17 @@
-lscache
-===============================
+# lscache
+
 This is a simple library that emulates `memcache` functions using HTML5 `localStorage`, so that you can cache data on the client
 and associate an expiration time with each piece of data. If the `localStorage` limit (~5MB) is exceeded, it tries to create space by removing the items that are closest to expiring anyway. If `localStorage` is not available at all in the browser, the library degrades by simply not caching and all cache requests return null.
 
-Methods
--------
+## Methods
 
-The library exposes these methods: `set()`, `get()`, `remove()`, `flush()`, `flushExpired()`, `setBucket()`, `resetBucket()`, `setExpiryMilliseconds()`.
+The library exposes these methods: `set()`, `get()`, `remove()`, `flush()`, `flushExpired()`, `bucket()`, `setExpiryMilliseconds()`.
 
 * * *
 
 ### lscache.set
-Stores the value in localStorage. Expires after specified number of minutes.
+Stores the value in localStorage. Expires after specified number of minutes. Will not expire if time is not set.
+
 #### Arguments
 1. `key` (**string**)
 2. `value` (**Object|string**)
@@ -49,15 +49,13 @@ Removes all expired lscache items from localStorage without affecting other data
 
 * * *
 
-### lscache.setBucket
-Appends CACHE_PREFIX so lscache will partition data in to different buckets.
+### lscache.bucket
+Use buckets to make lscache partition data in to different buckets. i.e. Flushing a bucket only removes items in that bucket.
 #### Arguments
-1. `bucket` (**string**)
+1. `bucketName` (**string**)
 
-* * *
-
-### lscache.resetBucket
-Removes prefix from keys so that lscache no longer stores in a particular bucket.
+#### Returns
+**Bucket** : A Bucket instance.
 
 * * *
 
@@ -70,8 +68,7 @@ Sets the number of milliseconds each time unit represents in the set() function'
 #### Arguments
 1. `milliseconds` (**number**)
 
-Usage
--------
+## Usage
 
 The interface should be familiar to those of you who have used `memcache`, and should be easy to understand for those of you who haven't.
 
@@ -136,16 +133,22 @@ And then when you retrieve it, you will get it back as an object:
 alert(lscache.get('data').name);
 ```
 
-If you have multiple instances of lscache running on the same domain, you can partition data in a certain bucket via:
+If you want to namespace some storage, so that all items can be flushed at once. Or you have multiple instances of lscache on a page, use the bucket system. Buckets have the same API as the top level `lscache` (`lscache` is actually a global bucket).
 
 ```js
 lscache.set('response', '...', 2);
-lscache.setBucket('lib');
-lscache.set('path', '...', 2);
-lscache.flush(); //only removes 'path' which was set in the lib bucket
+const bucket = lscache.bucket('mythings');
+bucket.set('path', '...', 2);
+bucket.flush(); // only removes 'path' which was set in the `mythings` bucket
 ```
 
-The default unit for the `set()` function's "time" argument is minutes.  A shorter time may be desired, for example, in unit tests.  You can use `lscache.setExpriryMilliseconds()` to select a finer granularity of time unit:
+Bucket returns it's own instance so you can chain one command.
+
+```js
+lscache.bucket('mythings').set('path', '...', 2);
+```
+
+The default unit for the `set()` function's "time" argument is in minutes. A shorter time may be desired, for example, in unit tests.  You can use `lscache.setExpriryMilliseconds()` to select a finer granularity of time unit. This affects all buckets.
 ```js
 asyncTest('Testing set() and get() with different units', function() {´
   var expiryMilliseconds = 1000;  //time units is seconds
@@ -156,7 +159,7 @@ asyncTest('Testing set() and get() with different units', function() {´
   setTimeout(function() {
     equal(lscache.get(key), null, 'We expect value to be null');
     start();
-  }, expiryMilliseconds*numExpiryUnits + 1);
+  }, expiryMilliseconds * numExpiryUnits + 1);
 });
 ```
 
@@ -164,8 +167,8 @@ For more live examples, play around with the demo here:
 http://pamelafox.github.com/lscache/demo.html
 
 
-Real-World Usage
-----------
+## Real-World Usage
+
 This library was originally developed with the use case of caching results of JSON API queries
 to speed up my webapps and give them better protection against flaky APIs.
 (More on that in this [blog post](http://blog.pamelafox.org/2010/10/lscache-localstorage-based-memcache.html))
@@ -219,27 +222,14 @@ function initBuckets() {
 }
 ```
 
-Browser Support
-----------------
+## Browser Support
 
 The `lscache` library should work in all browsers where `localStorage` is supported.
 A list of those is here:
 http://www.quirksmode.org/dom/html5.html
 
-
-Building
-----------------
-
-For contributors:
+## Developing
 
 * Run `npm install` to install all the dependencies.
-* Run `grunt`. The default task will check the files with jshint, minify them, and use browserify to generate a bundle for testing.
-* Run `grunt test` to run the tests.
-
-
-For repo owners, after a code change:
-
-* Run `grunt bump` to tag the new release.
-* Run `npm login`, `npm publish` to release on npm.
-
-
+* Run `npm run build` to build the library using rollup.
+* Run `npm test` to run the tests.

@@ -9,20 +9,22 @@
     "url": "https://github.com/pamelafox/lscache.git"
   },
   "homepage": "http://github.com/pamelafox/lscache",
-  "main": "lscache",
+  "main": "dist/lscache.js",
   "version": "1.2.0",
   "devDependencies": {
-    "grunt-contrib-qunit": "1.3.x",
+    "browserify-shim": "3.8.x",
     "grunt": "1.0.x",
     "grunt-browserify": "5.0.x",
     "grunt-bump": "0.8.x",
     "grunt-cli": "1.0.x",
     "grunt-contrib-jshint": "1.1.x",
+    "grunt-contrib-qunit": "1.3.x",
     "grunt-contrib-uglify": "2.1.x",
-    "browserify-shim": "3.8.x"
+    "rollup-plugin-babel": "^4.3.2"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "jest --coverage",
+    "build": "rollup src/index.js --file dist/lscache.js --format umd --name 'lscache'"
   },
   "browserify": {
     "transform": [
@@ -34,5 +36,17 @@
   },
   "browserify-shim": {
     "./tests/qunit.js": "qunit"
+  },
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
+    "babel-jest": "^24.1.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "jest": "^24.1.0",
+    "rollup": "^1.1.2",
+    "rollup-plugin-uglify": "^6.0.2"
   }
 }
