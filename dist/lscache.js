@@ -1,8 +1,8 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global.lscache = factory());
-}(this, (function () { 'use strict';
+  (global = global || self, global.lscache = factory());
+}(this, function () { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -102,15 +102,16 @@
    *
    * @param {Object} store Store wrapper
    * @param {lscache} lscache Instance of lscache (yay circular references!)
-   * @param {String} cacheBucket Bucket name
+   * @param {String} bucketName Bucket name
    */
-  function LSCacheBucket(store, lscache, cacheBucket) {
+  function LSCacheBucket(store, lscache, bucketName) {
     var _this = this;
 
     _classCallCheck(this, LSCacheBucket);
 
     _defineProperty(this, "buildKey", function (key) {
-      return "".concat(_this.lscache.cachePrefix).concat(_this.cacheBucket, "/").concat(key);
+      var bucketPrefix = _this.bucketName ? "".concat(_this.bucketName, "/") : '';
+      return "".concat(_this.lscache.cachePrefix).concat(bucketPrefix).concat(key);
     });
 
     _defineProperty(this, "buildExpirationKey", function (key) {
@@ -248,7 +249,7 @@
     });
 
     _defineProperty(this, "_eachKey", function (fn) {
-      var escapedBucketName = escapeRegExpSpecialCharacters(_this.cacheBucket);
+      var escapedBucketName = escapeRegExpSpecialCharacters(_this.bucketName);
       var prefixRegExp = new RegExp("^".concat(_this.lscache.cachePrefix).concat(escapedBucketName, "/(.*)")); // Loop in reverse as removing items will change indices of tail
 
       for (var i = _this.store.length - 1; i >= 0; --i) {
@@ -291,7 +292,7 @@
 
     this.store = store;
     this.lscache = lscache;
-    this.cacheBucket = cacheBucket; // expiration date radix (set to Base-36 for most space savings)
+    this.bucketName = bucketName; // expiration date radix (set to Base-36 for most space savings)
 
     this.expiryRadix = 10;
   };
@@ -438,4 +439,4 @@
 
   return lscache;
 
-})));
+}));

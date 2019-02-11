@@ -7,18 +7,22 @@ class LSCacheBucket {
    *
    * @param {Object} store Store wrapper
    * @param {lscache} lscache Instance of lscache (yay circular references!)
-   * @param {String} cacheBucket Bucket name
+   * @param {String} bucketName Bucket name
    */
-  constructor(store, lscache, cacheBucket) {
+  constructor(store, lscache, bucketName) {
     this.store = store;
     this.lscache = lscache;
-    this.cacheBucket = cacheBucket;
+    this.bucketName = bucketName;
 
     // expiration date radix (set to Base-36 for most space savings)
     this.expiryRadix = 10;
   }
 
-  buildKey = key => `${this.lscache.cachePrefix}${this.cacheBucket}/${key}`;
+  buildKey = key => {
+    const bucketPrefix = this.bucketName ? `${this.bucketName}/` : '';
+
+    return `${this.lscache.cachePrefix}${bucketPrefix}${key}`;
+  };
 
   buildExpirationKey = key => `${key}${this.lscache.cacheExpirationSuffix}`;
 
@@ -170,7 +174,7 @@ class LSCacheBucket {
   };
 
   _eachKey = fn => {
-    const escapedBucketName = escapeRegExpSpecialCharacters(this.cacheBucket);
+    const escapedBucketName = escapeRegExpSpecialCharacters(this.bucketName);
     const prefixRegExp = new RegExp(
       `^${this.lscache.cachePrefix}${escapedBucketName}\/(.*)`
     );

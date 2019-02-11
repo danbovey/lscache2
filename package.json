@@ -1,5 +1,6 @@
 {
   "name": "lscache",
+  "version": "2.0.0",
   "title": "lscache",
   "description": "A simple library that emulates memcache functions using HTML5 localStorage",
   "author": "Pamela Fox",
@@ -10,7 +11,6 @@
   },
   "homepage": "http://github.com/pamelafox/lscache",
   "main": "dist/lscache.js",
-  "version": "1.2.0",
   "devDependencies": {
     "browserify-shim": "3.8.x",
     "grunt": "1.0.x",
@@ -24,7 +24,7 @@
   },
   "scripts": {
     "test": "jest --coverage",
-    "build": "rollup src/index.js --file dist/lscache.js --format umd --name 'lscache'"
+    "build": "rollup -c"
   },
   "browserify": {
     "transform": [
