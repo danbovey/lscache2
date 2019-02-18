@@ -115,7 +115,7 @@
     });
 
     _defineProperty(this, "buildExpirationKey", function (key) {
-      return "".concat(key).concat(_this.lscache.cacheExpirationSuffix);
+      return "".concat(_this.lscache.cachePrefix).concat(key).concat(_this.lscache.cacheExpirationSuffix);
     });
 
     _defineProperty(this, "get", function (key) {
