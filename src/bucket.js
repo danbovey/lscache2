@@ -24,7 +24,8 @@ class LSCacheBucket {
     return `${this.lscache.cachePrefix}${bucketPrefix}${key}`;
   };
 
-  buildExpirationKey = key => `${key}${this.lscache.cacheExpirationSuffix}`;
+  buildExpirationKey = key =>
+    `${this.lscache.cachePrefix}${key}${this.lscache.cacheExpirationSuffix}`;
 
   /**
    * Retrieves specified value from localStorage, if not expired.
