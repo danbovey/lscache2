@@ -1,6 +1,6 @@
 {
   "name": "lscache",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "title": "lscache",
   "description": "A simple library that emulates memcache functions using HTML5 localStorage",
   "author": "Pamela Fox",
@@ -13,8 +13,8 @@
   "main": "dist/lscache.js",
   "devDependencies": {
     "browserify-shim": "3.8.x",
-    "grunt": "1.0.x",
-    "grunt-browserify": "5.0.x",
+    "grunt": "^1.0.4",
+    "grunt-browserify": "^5.3.0",
     "grunt-bump": "0.8.x",
     "grunt-cli": "1.0.x",
     "grunt-contrib-jshint": "1.1.x",
@@ -45,7 +45,7 @@
     "@babel/preset-env": "^7.3.1",
     "babel-jest": "^24.1.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "jest": "^24.1.0",
+    "jest": "^24.8.0",
     "rollup": "^1.1.2",
     "rollup-plugin-uglify": "^6.0.2"
   }
